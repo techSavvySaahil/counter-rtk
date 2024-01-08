@@ -19,18 +19,18 @@ export const Counter = () => {
   const dispatch = useDispatch();
   const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
-  // Creating common function for incrementing count by user input amount
+  // Creating common function for incrementing count (counter's current value) 
+  // by user input amount with and without condition
   const incrementAmountConditionally = (checkCondition: boolean) => {
     if (inputRef && inputRef.current) {
       const { value = "" } = inputRef.current;
       const amount = parseInt(value);
       if (checkCondition) {
-        // commented for now
         // dispatching event to add incrementAmount only if count is odd
-        // dispatch(incrementIfOddAsync(amount))
+        dispatch(incrementIfOddAsync(amount));
       } else {
         // dispatching event to add incrementAmount to count
-        dispatch(incrementByAmount(amount))
+        dispatch(incrementByAmount(amount));
       }
     }
   }
