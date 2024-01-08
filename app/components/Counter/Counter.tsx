@@ -1,16 +1,39 @@
 "use client";
 
 /* Core */
-import { useState } from "react";
+import { useRef } from "react";
 
 /* Instruments */
-import { useSelector, selectCount } from "@/lib/redux";
+import { useSelector, selectCount, useDispatch } from "@/lib/redux";
 import styles from "./counter.module.css";
+import { counterSlice, incrementIfOddAsync } from "@/lib/redux/slices";
 
 export const Counter = () => {
-  const count = useSelector(selectCount);
-
   // Create a state named incrementAmount
+
+  // For most of the scenarios with input elements,
+  // we use refs instead of states
+  // as the refs don't cause rerenders
+  const inputRef = useRef(null);
+  const count = useSelector(selectCount);
+  const dispatch = useDispatch();
+  const { increment, decrement, incrementByAmount } = counterSlice.actions;
+
+  // Creating common function for incrementing count by user input amount
+  const incrementAmountConditionally = (checkCondition: boolean) => {
+    if (inputRef && inputRef.current) {
+      const { value = "" } = inputRef.current;
+      const amount = parseInt(value);
+      if (checkCondition) {
+        // commented for now
+        // dispatching event to add incrementAmount only if count is odd
+        // dispatch(incrementIfOddAsync(amount))
+      } else {
+        // dispatching event to add incrementAmount to count
+        dispatch(incrementByAmount(amount))
+      }
+    }
+  }
 
   return (
     <div>
@@ -19,7 +42,8 @@ export const Counter = () => {
           className={styles.button}
           aria-label="Decrement value"
           onClick={() => {
-            // dispatch event to decrease count by 1
+            // dispatching event to decrease count by 1
+            dispatch(decrement(1));
           }}
         >
           -
@@ -29,18 +53,19 @@ export const Counter = () => {
           className={styles.button}
           aria-label="Increment value"
           onClick={() => {
-            // dispatch event to increment count by 1
+            // dispatching event to increment count by 1
+            dispatch(increment(1));
           }}
         >
           +
         </button>
       </div>
       <div className={styles.row}>
-        <input className={styles.textbox} aria-label="Set increment amount" />
+        <input ref={inputRef} className={styles.textbox} aria-label="Set increment amount" />
         <button
           className={styles.button}
           onClick={() => {
-            // dispatch event to add incrementAmount to count
+            incrementAmountConditionally(false)
           }}
         >
           Add Amount
@@ -48,7 +73,7 @@ export const Counter = () => {
         <button
           className={styles.button}
           onClick={() => {
-            // dispatch event to add incrementAmount only if count is odd
+            incrementAmountConditionally(true)
           }}
         >
           Add If Odd

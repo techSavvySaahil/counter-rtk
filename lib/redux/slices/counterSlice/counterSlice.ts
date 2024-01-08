@@ -10,9 +10,22 @@ export const counterSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    // increment, decreament, incrementByAmount loginc here
+    // incrementing counter value
+    increment: (state, action) => {
+      state.value++;
+    },
+    // decrementing counter value
+    decrement: (state, action) => {
+      state.value--;
+    },
+    // incrementing counter value with user-defined input
+    incrementByAmount: (state, action) => {
+      state.value += action.payload;
+    }
   },
 });
+
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 /* Types */
 export interface CounterSliceState {
